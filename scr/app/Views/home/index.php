@@ -12,9 +12,13 @@
             <p class="eyebrow">PHP MVC Skeleton</p>
             <h1><?= $e($title ?? 'Personal Time Optimizer') ?></h1>
             <p>
-                The project foundation is ready. Next steps are login, category management,
-                activity management, schedules, time logs, gap analysis, and dashboard alerts.
+                Category and activity management are ready for the demo user.
+                Schedules, time logs, gap analysis, and dashboard alerts are still upcoming.
             </p>
+            <div class="home-actions">
+                <a class="button primary" href="/categories">Manage Categories</a>
+                <a class="button" href="/activities">Manage Activities</a>
+            </div>
         </section>
     </main>
     <script src="assets/js/app.js"></script>

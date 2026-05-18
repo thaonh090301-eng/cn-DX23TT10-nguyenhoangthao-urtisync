@@ -6,6 +6,19 @@ namespace App\Core;
 
 class Controller
 {
+    protected function flash(string $type, string $message): void
+    {
+        $_SESSION['flash'][$type] = $message;
+    }
+
+    protected function consumeFlash(): array
+    {
+        $flash = $_SESSION['flash'] ?? [];
+        unset($_SESSION['flash']);
+
+        return $flash;
+    }
+
     protected function view(string $view, array $data = []): string
     {
         $viewPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Views' . DIRECTORY_SEPARATOR
