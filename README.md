@@ -46,3 +46,55 @@ cn-DX23TT10-nguyenhoangthao-thaonh090301-eng/
 │   └── refs/
 ├── soft/
 └── docker/
+```
+
+## 6. Huong dan cai dat local
+
+### Yeu cau
+
+- PHP 8.x
+- MySQL hoac MariaDB
+- XAMPP, WAMP hoac Laragon
+- Trinh duyet web
+
+### Cau hinh co so du lieu
+
+1. Tao file `.env` tu file mau `.env.example`.
+2. Cap nhat cac gia tri `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` trong `.env`.
+3. Mo phpMyAdmin hoac MySQL client.
+4. Import `setup/database/schema.sql`.
+5. Import `setup/database/seed.sql` neu can du lieu demo.
+
+Tai khoan demo trong seed:
+
+- Email: `demo@example.com`
+- Mat khau: `password`
+
+### Chay ung dung
+
+Neu dung PHP built-in server:
+
+```bash
+cd scr/public
+php -S localhost:8000
+```
+
+Sau do mo:
+
+```txt
+http://localhost:8000
+```
+
+Neu dung XAMPP, WAMP hoac Laragon, dat thu muc project trong web root va cau hinh virtual host tro vao:
+
+```txt
+scr/public
+```
+
+### Ghi chu phat trien
+
+- Source code chinh nam trong `scr/`.
+- File database nam trong `setup/database/`.
+- Khong commit file `.env`.
+- Ket noi database su dung PDO trong `scr/app/Core/Database.php`.
+- Router don gian nam trong `scr/app/Core/Router.php`.
