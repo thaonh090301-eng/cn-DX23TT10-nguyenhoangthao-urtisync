@@ -42,7 +42,7 @@ CREATE TABLE categories (
 CREATE TABLE activities (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
-    category_id INT UNSIGNED NULL,
+    category_id INT UNSIGNED NOT NULL,
     title VARCHAR(150) NOT NULL,
     description TEXT NULL,
     priority ENUM('low', 'medium', 'high') NOT NULL DEFAULT 'medium',
@@ -57,7 +57,7 @@ CREATE TABLE activities (
         ON DELETE CASCADE,
     CONSTRAINT fk_activities_category
         FOREIGN KEY (category_id) REFERENCES categories(id)
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE schedules (
