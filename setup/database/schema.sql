@@ -63,7 +63,7 @@ CREATE TABLE activities (
 CREATE TABLE schedules (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
-    activity_id INT UNSIGNED NULL,
+    activity_id INT UNSIGNED NOT NULL,
     title VARCHAR(150) NOT NULL,
     start_at DATETIME NOT NULL,
     end_at DATETIME NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE schedules (
         ON DELETE CASCADE,
     CONSTRAINT fk_schedules_activity
         FOREIGN KEY (activity_id) REFERENCES activities(id)
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE time_logs (
