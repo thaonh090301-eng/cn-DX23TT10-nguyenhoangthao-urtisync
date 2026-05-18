@@ -6,6 +6,10 @@
 - Thêm file .gitignore.
 - Tạo cấu trúc thư mục ban đầu cho đồ án.
 - Xác định công nghệ sử dụng: PHP, MySQL, HTML, CSS, JavaScript, FullCalendar.
+- Xây dựng chức năng quản lý danh mục hoạt động.
+- Xây dựng chức năng quản lý hoạt động cá nhân.
+- Xây dựng chức năng lập lịch và hiển thị lịch bằng FullCalendar.
+- Xây dựng chức năng ghi nhận thời gian thực tế bằng Time Logs.
 
 
 ## 2. Công việc đang thực hiện
