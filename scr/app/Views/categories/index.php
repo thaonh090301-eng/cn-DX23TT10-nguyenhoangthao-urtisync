@@ -40,7 +40,7 @@
                         <tbody>
                             <?php foreach ($categories as $category): ?>
                                 <tr>
-                                    <td><?= $e($category['name']) ?></td>
+                                    <td><?= $e(display_category_name($category['name'])) ?></td>
                                     <td>
                                         <span class="color-chip" style="--chip: <?= $e($category['color']) ?>"></span>
                                         <?= $e($category['color']) ?>

@@ -77,7 +77,7 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
                             <div class="category-meta">
                                 <span>
                                     <i class="color-chip" style="--chip: <?= $e($category['color']) ?>"></i>
-                                    <?= $e($category['name']) ?>
+                                    <?= $e(display_category_name($category['name'])) ?>
                                 </span>
                                 <strong><?= $e($category['minutes']) ?> <?= $e(__('unit.min')) ?></strong>
                             </div>
@@ -104,7 +104,7 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
                             <div class="category-meta">
                                 <span>
                                     <i class="color-chip" style="--chip: <?= $e($category['color']) ?>"></i>
-                                    <?= $e($category['name']) ?>
+                                    <?= $e(display_category_name($category['name'])) ?>
                                 </span>
                                 <strong><?= $e($category['minutes']) ?> <?= $e(__('unit.min')) ?></strong>
                             </div>

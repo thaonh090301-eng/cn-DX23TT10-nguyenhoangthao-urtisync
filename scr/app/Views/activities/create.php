@@ -24,7 +24,7 @@
                     <option value=""><?= $e(__('option.choose_category')) ?></option>
                     <?php foreach ($categories as $category): ?>
                         <option value="<?= $e($category['id']) ?>" <?= ((int) ($activity['category_id'] ?? 0) === (int) $category['id']) ? 'selected' : '' ?>>
-                            <?= $e($category['name']) ?>
+                            <?= $e(display_category_name($category['name'])) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

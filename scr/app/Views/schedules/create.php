@@ -31,7 +31,7 @@ $dateTimeLocal = static fn (mixed $value): string => str_replace(' ', 'T', subst
                     <option value=""><?= $e(__('option.choose_activity')) ?></option>
                     <?php foreach ($activities as $activity): ?>
                         <option value="<?= $e($activity['id']) ?>" <?= ((int) ($schedule['activity_id'] ?? 0) === (int) $activity['id']) ? 'selected' : '' ?>>
-                            <?= $e($activity['title']) ?> - <?= $e($activity['category_name']) ?>
+                            <?= $e(display_activity_title($activity['title'])) ?> - <?= $e(display_category_name($activity['category_name'])) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

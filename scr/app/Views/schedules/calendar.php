@@ -24,6 +24,7 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales-all.global.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const calendarElement = document.getElementById('calendar');
@@ -33,10 +34,19 @@
             }
 
             const calendar = new FullCalendar.Calendar(calendarElement, {
+                locale: <?= json_encode(\App\Core\Lang::locale(), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>,
                 initialView: 'timeGridWeek',
                 height: 'auto',
                 nowIndicator: true,
                 eventDisplay: 'block',
+                allDayText: <?= json_encode(__('calendar.all_day'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>,
+                buttonText: {
+                    today: <?= json_encode(__('calendar.today'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>,
+                    month: <?= json_encode(__('calendar.month'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>,
+                    week: <?= json_encode(__('calendar.week'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>,
+                    day: <?= json_encode(__('calendar.day'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>,
+                    list: <?= json_encode(__('calendar.list'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>
+                },
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',

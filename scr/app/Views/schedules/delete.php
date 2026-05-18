@@ -20,8 +20,8 @@
         <section class="panel form-stack">
             <p>
                 <?= $e(__('message.delete_schedule')) ?>
-                <strong><?= $e($schedule['title']) ?></strong>
-                <?= $e(__('message.schedule_for_activity', ['activity' => $schedule['activity_title']])) ?>
+                <strong><?= $e(display_activity_title($schedule['title'])) ?></strong>
+                <?= $e(__('message.schedule_for_activity', ['activity' => display_activity_title($schedule['activity_title'])])) ?>
             </p>
 
             <form method="post" action="/schedules/<?= $e($schedule['id']) ?>">

@@ -38,6 +38,7 @@ $router->delete('/activities/{id}', [ActivityController::class, 'destroy']);
 
 $router->get('/schedules', [ScheduleController::class, 'index']);
 $router->get('/schedules/calendar', [ScheduleController::class, 'calendar']);
+$router->get('/calendar', [ScheduleController::class, 'calendar']);
 $router->get('/schedules/create', [ScheduleController::class, 'create']);
 $router->post('/schedules', [ScheduleController::class, 'store']);
 $router->get('/schedules/{id}/edit', [ScheduleController::class, 'edit']);

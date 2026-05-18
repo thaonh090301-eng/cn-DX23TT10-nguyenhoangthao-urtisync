@@ -24,8 +24,8 @@
 
             <p>
                 <?= $e(__('message.delete_activity')) ?>
-                <strong><?= $e($activity['title']) ?></strong>
-                <?= $e($activity['category_name']) ?>
+                <strong><?= $e(display_activity_title($activity['title'])) ?></strong>
+                <?= $e(display_category_name($activity['category_name'])) ?>
                 <?= $e(__('message.activity_usage', ['schedules' => $activity['schedules_count'] ?? 0, 'time_logs' => $activity['time_logs_count'] ?? 0])) ?>
             </p>
 

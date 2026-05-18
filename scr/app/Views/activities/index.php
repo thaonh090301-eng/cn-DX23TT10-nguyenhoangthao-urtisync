@@ -41,10 +41,10 @@
                         <tbody>
                             <?php foreach ($activities as $activity): ?>
                                 <tr>
-                                    <td><?= $e($activity['title']) ?></td>
+                                    <td><?= $e(display_activity_title($activity['title'])) ?></td>
                                     <td>
                                         <span class="color-chip" style="--chip: <?= $e($activity['category_color']) ?>"></span>
-                                        <?= $e($activity['category_name']) ?>
+                                        <?= $e(display_category_name($activity['category_name'])) ?>
                                     </td>
                                     <td><?= $e(__('priority.' . $activity['priority'])) ?></td>
                                     <td><?= $e($activity['estimated_minutes']) ?> <?= $e(__('unit.min')) ?></td>

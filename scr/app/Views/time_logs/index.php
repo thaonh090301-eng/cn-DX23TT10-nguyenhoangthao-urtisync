@@ -42,10 +42,10 @@
                         <tbody>
                             <?php foreach ($timeLogs as $timeLog): ?>
                                 <tr>
-                                    <td><?= $e($timeLog['activity_title']) ?></td>
+                                    <td><?= $e(display_activity_title($timeLog['activity_title'])) ?></td>
                                     <td>
                                         <span class="color-chip" style="--chip: <?= $e($timeLog['category_color']) ?>"></span>
-                                        <?= $e($timeLog['category_name']) ?>
+                                        <?= $e(display_category_name($timeLog['category_name'])) ?>
                                     </td>
                                     <td><?= $e($timeLog['started_at']) ?></td>
                                     <td><?= $e($timeLog['ended_at']) ?></td>

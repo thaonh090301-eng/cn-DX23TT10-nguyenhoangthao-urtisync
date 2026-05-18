@@ -24,7 +24,7 @@
 
             <p>
                 <?= $e(__('message.delete_category')) ?>
-                <strong><?= $e($category['name']) ?></strong>
+                <strong><?= $e(display_category_name($category['name'])) ?></strong>
                 <?= $e(__('message.category_has_activities', ['count' => $category['activities_count']])) ?>
             </p>
 

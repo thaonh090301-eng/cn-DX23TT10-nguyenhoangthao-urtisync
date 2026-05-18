@@ -16,7 +16,7 @@
                 <h1><?= $e(__('nav.schedules')) ?></h1>
             </div>
             <div class="header-actions">
-                <a class="button" href="/schedules/calendar"><?= $e(__('nav.calendar')) ?></a>
+                <a class="button" href="/calendar"><?= $e(__('nav.calendar')) ?></a>
                 <a class="button primary" href="/schedules/create"><?= $e(__('action.new_schedule')) ?></a>
             </div>
         </section>
@@ -45,11 +45,11 @@
                         <tbody>
                             <?php foreach ($schedules as $schedule): ?>
                                 <tr>
-                                    <td><?= $e($schedule['title']) ?></td>
-                                    <td><?= $e($schedule['activity_title']) ?></td>
+                                    <td><?= $e(display_activity_title($schedule['title'])) ?></td>
+                                    <td><?= $e(display_activity_title($schedule['activity_title'])) ?></td>
                                     <td>
                                         <span class="color-chip" style="--chip: <?= $e($schedule['category_color']) ?>"></span>
-                                        <?= $e($schedule['category_name']) ?>
+                                        <?= $e(display_category_name($schedule['category_name'])) ?>
                                     </td>
                                     <td><?= $e($schedule['start_at']) ?></td>
                                     <td><?= $e($schedule['end_at']) ?></td>

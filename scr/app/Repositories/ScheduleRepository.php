@@ -124,16 +124,16 @@ class ScheduleRepository
         return array_map(static function (array $schedule): array {
             return [
                 'id' => (string) $schedule['id'],
-                'title' => $schedule['title'],
+                'title' => \display_activity_title($schedule['title']),
                 'start' => str_replace(' ', 'T', $schedule['start_at']),
                 'end' => str_replace(' ', 'T', $schedule['end_at']),
                 'backgroundColor' => $schedule['category_color'],
                 'borderColor' => $schedule['category_color'],
                 'textColor' => '#ffffff',
                 'extendedProps' => [
-                    'activity' => $schedule['activity_title'],
-                    'category' => $schedule['category_name'],
-                    'status' => $schedule['status'],
+                    'activity' => \display_activity_title($schedule['activity_title']),
+                    'category' => \display_category_name($schedule['category_name']),
+                    'status' => \__('schedule_status.' . $schedule['status']),
                     'notes' => $schedule['notes'],
                 ],
             ];

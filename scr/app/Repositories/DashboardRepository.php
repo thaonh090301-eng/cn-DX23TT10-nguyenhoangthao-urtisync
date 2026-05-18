@@ -115,7 +115,13 @@ class DashboardRepository
                 AND c.user_id = :category_user_id
                 AND tl.started_at >= :start_at
                 AND tl.started_at < :end_at
-                AND LOWER(c.name) IN (:personal_name, :recreation_name)'
+                AND LOWER(c.name) IN (
+                    :personal_name,
+                    :recreation_name,
+                    :chill_name,
+                    :personal_vi_name,
+                    :recreation_vi_name
+                )'
         );
         $statement->execute([
             'log_user_id' => $userId,
@@ -125,6 +131,9 @@ class DashboardRepository
             'end_at' => $today['end'],
             'personal_name' => 'personal',
             'recreation_name' => 'recreation',
+            'chill_name' => 'chill',
+            'personal_vi_name' => 'cá nhân',
+            'recreation_vi_name' => 'giải trí',
         ]);
 
         return (int) $statement->fetchColumn();

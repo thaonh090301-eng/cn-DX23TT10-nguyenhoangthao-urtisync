@@ -20,7 +20,7 @@
         <section class="panel form-stack">
             <p>
                 <?= $e(__('message.delete_time_log')) ?>
-                <strong><?= $e($timeLog['activity_title']) ?></strong>
+                <strong><?= $e(display_activity_title($timeLog['activity_title'])) ?></strong>
                 <?= $e(__('message.logged_from_to', ['start' => $timeLog['started_at'], 'end' => $timeLog['ended_at']])) ?>
             </p>
 

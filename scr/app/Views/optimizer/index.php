@@ -25,7 +25,7 @@
             <div class="alert danger"><?= $e($flash['danger']) ?></div>
         <?php endif; ?>
 
-        <section class="panel dashboard-section">
+        <section class="panel dashboard-section" id="optimizer-form">
             <?php if ($activities === []): ?>
                 <div class="alert danger"><?= $e(__('message.create_activity_before_suggestions')) ?></div>
             <?php endif; ?>
@@ -37,7 +37,7 @@
                         <option value=""><?= $e(__('option.choose_activity')) ?></option>
                         <?php foreach ($activities as $activity): ?>
                             <option value="<?= $e($activity['id']) ?>" <?= ((int) ($input['activity_id'] ?? 0) === (int) $activity['id']) ? 'selected' : '' ?>>
-                                <?= $e($activity['title']) ?> - <?= $e($activity['category_name']) ?>
+                                <?= $e(display_activity_title($activity['title'])) ?> - <?= $e(display_category_name($activity['category_name'])) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -126,19 +126,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($suggestions as $suggestion): ?>
-                                <tr>
+                            <?php foreach ($suggestions as $index => $suggestion): ?>
+                                <tr class="<?= $index === 0 ? 'best-suggestion' : '' ?>">
                                     <td><?= $e($suggestion['start_at']) ?></td>
                                     <td><?= $e($suggestion['end_at']) ?></td>
                                     <td><?= $e($suggestion['gap_minutes']) ?> <?= $e(__('unit.min')) ?></td>
-                                    <td><?= $e($suggestion['activity_title']) ?></td>
+                                    <td><?= $e(display_activity_title($suggestion['activity_title'])) ?></td>
                                     <td>
                                         <span class="color-chip" style="--chip: <?= $e($suggestion['category_color']) ?>"></span>
-                                        <?= $e($suggestion['category_name']) ?>
+                                        <?= $e(display_category_name($suggestion['category_name'])) ?>
                                     </td>
-                                    <td><?= $e($suggestion['score']) ?></td>
-                                    <td><?= $e($suggestion['reason']) ?></td>
                                     <td>
+                                        <span class="score-pill"><?= $e($suggestion['score']) ?></span>
+                                        <?php if ($index === 0): ?>
+                                            <span class="best-pill"><?= $e(__('ui.best')) ?></span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= $e($suggestion['reason']) ?></td>
+                                    <td class="suggestion-action">
                                         <form method="post" action="/optimizer/schedule">
                                             <input type="hidden" name="activity_id" value="<?= $e($suggestion['activity_id']) ?>">
                                             <input type="hidden" name="start_at" value="<?= $e($suggestion['start_at']) ?>">
