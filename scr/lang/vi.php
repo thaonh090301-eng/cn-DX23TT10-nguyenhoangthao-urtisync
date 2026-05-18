@@ -13,7 +13,7 @@ return [
     'language.en' => 'EN',
     'language.switcher' => 'Chuyển ngôn ngữ',
     'ui.workspace' => 'Không gian làm việc',
-    'ui.theme' => 'Tùy chỉnh',
+    'ui.theme' => 'Giao diện',
     'ui.theme_mode' => 'Giao diện',
     'ui.accent_color' => 'Màu nhấn',
     'ui.density' => 'Mật độ',
