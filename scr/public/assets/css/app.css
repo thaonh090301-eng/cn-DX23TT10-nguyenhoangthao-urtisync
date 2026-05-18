@@ -75,19 +75,20 @@ p {
 }
 
 .app-shell {
-    width: min(1080px, 100%);
+    width: min(1240px, 100%);
     margin: 0 auto;
     padding: 24px;
 }
 
 .app-shell.narrow {
-    width: min(760px, 100%);
+    width: min(980px, 100%);
 }
 
 .top-nav {
+    align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 6px;
     margin-bottom: 28px;
 }
 
@@ -96,8 +97,10 @@ p {
     border-radius: 8px;
     background: var(--panel);
     color: var(--text);
-    padding: 9px 12px;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.2;
+    padding: 8px 10px;
+    white-space: nowrap;
 }
 
 .top-nav a[aria-current="page"] {
@@ -279,6 +282,12 @@ button.danger {
     color: #ffffff;
 }
 
+.button.compact,
+button.compact {
+    min-height: 34px;
+    padding: 7px 10px;
+}
+
 .alert {
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -445,6 +454,15 @@ button.danger {
         padding: 16px;
     }
 
+    .top-nav {
+        gap: 8px;
+    }
+
+    .top-nav a {
+        flex: 1 1 calc(50% - 8px);
+        text-align: center;
+    }
+
     .page-header {
         align-items: stretch;
         flex-direction: column;
@@ -471,5 +489,11 @@ button.danger {
 
     .section-heading {
         flex-direction: column;
+    }
+}
+
+@media (min-width: 900px) {
+    .top-nav {
+        flex-wrap: nowrap;
     }
 }
