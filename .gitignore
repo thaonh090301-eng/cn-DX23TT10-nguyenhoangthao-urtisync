@@ -1,0 +1,34 @@
+# Environment files
+.env
+.env.local
+
+# PHP dependencies
+vendor/
+
+# Node dependencies
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cache / Build
+.cache/
+dist/
+build/
+
+# Local database backups
+*.sql.gz
+*.dump
+
+# Temporary files
+tmp/
+temp/
