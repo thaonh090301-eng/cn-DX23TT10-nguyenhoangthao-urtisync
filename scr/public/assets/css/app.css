@@ -350,6 +350,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: var(--space-section);
     min-width: 0;
     border: 1px solid var(--line);
@@ -361,27 +362,37 @@ p {
 }
 
 .topbar-title {
+    flex: 1 1 280px;
     min-width: 0;
+    max-width: 100%;
 }
 
 .topbar-title h1 {
-    overflow: hidden;
     margin: 0;
     font-size: var(--topbar-heading-size);
     line-height: 1.15;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
 }
 
 .topbar-title .eyebrow {
     margin-bottom: 4px;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 
 .topbar-actions {
     display: flex;
     flex: 0 0 auto;
+    flex-shrink: 0;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     gap: calc(var(--dashboard-gap) * 0.7);
+    max-width: 100%;
 }
 
 .quick-add,
@@ -666,9 +677,23 @@ p {
     padding-bottom: var(--space-section);
 }
 
+.page-header > div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .page-header h1 {
     margin-bottom: 0;
     font-size: var(--page-heading-size);
+    overflow: visible;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.page-header .eyebrow {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 
 .page-header > .button,
@@ -678,7 +703,10 @@ p {
 
 .header-actions {
     display: flex;
+    flex: 0 0 auto;
+    flex-shrink: 0;
     flex-wrap: wrap;
+    justify-content: flex-end;
     gap: var(--dashboard-gap);
 }
 
