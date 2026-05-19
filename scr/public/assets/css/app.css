@@ -588,6 +588,10 @@ p {
     border-left-color: var(--warning);
 }
 
+.toast.info {
+    border-left-color: var(--accent);
+}
+
 .toast p {
     color: inherit;
     font-size: var(--small-font-size);
@@ -1443,6 +1447,11 @@ button.compact {
     background: var(--bg-soft);
 }
 
+.timetable-item.reminder .timetable-card {
+    border-left-color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 5%, var(--panel));
+}
+
 .timetable-card-header {
     display: flex;
     flex-wrap: wrap;
@@ -1462,6 +1471,69 @@ button.compact {
 
 .timetable-card form {
     margin: 0;
+}
+
+.reminder-grid {
+    display: grid;
+    gap: var(--dashboard-gap);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.reminder-card,
+.reminder-row {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    box-shadow: var(--shadow-soft);
+}
+
+.reminder-card {
+    display: grid;
+    gap: var(--dashboard-gap);
+    padding: var(--space-section);
+}
+
+.reminder-card.inactive {
+    opacity: 0.74;
+}
+
+.reminder-card-head,
+.reminder-list,
+.reminder-row {
+    display: grid;
+    gap: calc(var(--dashboard-gap) * 0.7);
+}
+
+.reminder-card-head {
+    align-items: center;
+    grid-template-columns: 1fr auto;
+}
+
+.reminder-card h2 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.25;
+}
+
+.reminder-card p,
+.reminder-row small {
+    color: var(--muted);
+    font-size: var(--small-font-size);
+}
+
+.reminder-row {
+    grid-template-columns: 82px minmax(0, 1fr);
+    align-items: start;
+    padding: 12px;
+}
+
+.reminder-row strong {
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+.reminder-row small {
+    grid-column: 2;
 }
 
 .language-switch {

@@ -9,6 +9,7 @@ use App\Controllers\CategoryController;
 use App\Controllers\DashboardController;
 use App\Controllers\LanguageController;
 use App\Controllers\OptimizerController;
+use App\Controllers\ReminderController;
 use App\Controllers\ScheduleController;
 use App\Controllers\TimeLogController;
 use App\Controllers\TimetableController;
@@ -52,6 +53,16 @@ $router->get('/schedules/{id}/delete', [ScheduleController::class, 'delete']);
 $router->delete('/schedules/{id}', [ScheduleController::class, 'destroy']);
 
 $router->get('/api/schedules', [ScheduleController::class, 'api']);
+$router->get('/api/reminders/today', [ReminderController::class, 'apiToday']);
+
+$router->get('/reminders', [ReminderController::class, 'index']);
+$router->get('/reminders/create', [ReminderController::class, 'create']);
+$router->post('/reminders', [ReminderController::class, 'store']);
+$router->post('/reminders/{id}/toggle', [ReminderController::class, 'toggle']);
+$router->get('/reminders/{id}/edit', [ReminderController::class, 'edit']);
+$router->put('/reminders/{id}', [ReminderController::class, 'update']);
+$router->get('/reminders/{id}/delete', [ReminderController::class, 'delete']);
+$router->delete('/reminders/{id}', [ReminderController::class, 'destroy']);
 
 $router->get('/time-logs', [TimeLogController::class, 'index']);
 $router->get('/time-logs/create', [TimeLogController::class, 'create']);

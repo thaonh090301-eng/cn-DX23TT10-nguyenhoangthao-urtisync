@@ -75,3 +75,21 @@ VALUES (
     75,
     'Sample actual time log.'
 );
+
+INSERT INTO reminders (user_id, title, note, remind_time, repeat_type, day_of_week, is_active)
+SELECT @demo_user_id, 'Uống nước', 'Nhắc nhẹ uống một ly nước.', '09:00:00', 'daily', NULL, 1
+WHERE NOT EXISTS (
+    SELECT 1 FROM reminders WHERE user_id = @demo_user_id AND title = 'Uống nước' AND remind_time = '09:00:00'
+);
+
+INSERT INTO reminders (user_id, title, note, remind_time, repeat_type, day_of_week, is_active)
+SELECT @demo_user_id, 'Tập thể dục', 'Vận động nhẹ để giữ năng lượng.', '17:00:00', 'daily', NULL, 1
+WHERE NOT EXISTS (
+    SELECT 1 FROM reminders WHERE user_id = @demo_user_id AND title = 'Tập thể dục' AND remind_time = '17:00:00'
+);
+
+INSERT INTO reminders (user_id, title, note, remind_time, repeat_type, day_of_week, is_active)
+SELECT @demo_user_id, 'Học tiếng Anh', 'Ôn từ vựng hoặc nghe 15 phút.', '20:30:00', 'daily', NULL, 1
+WHERE NOT EXISTS (
+    SELECT 1 FROM reminders WHERE user_id = @demo_user_id AND title = 'Học tiếng Anh' AND remind_time = '20:30:00'
+);

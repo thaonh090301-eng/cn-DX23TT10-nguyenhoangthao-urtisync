@@ -6,16 +6,19 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Repositories\DashboardRepository;
+use App\Repositories\ReminderRepository;
 
 class DashboardController extends Controller
 {
     private const DEMO_USER_ID = 1;
 
     private DashboardRepository $dashboard;
+    private ReminderRepository $reminders;
 
     public function __construct()
     {
         $this->dashboard = new DashboardRepository();
+        $this->reminders = new ReminderRepository();
     }
 
     public function index(): string
@@ -32,6 +35,7 @@ class DashboardController extends Controller
             'alerts' => $this->alerts($summary, $personalMinutes, $threshold),
             'personalThresholdMinutes' => $threshold,
             'personalActualMinutes' => $personalMinutes,
+            'upcomingReminders' => $this->reminders->upcomingToday(self::DEMO_USER_ID, 4),
         ]);
     }
 

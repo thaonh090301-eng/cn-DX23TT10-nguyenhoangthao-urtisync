@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\Database;
+use App\Repositories\ReminderRepository;
 use DateTimeImmutable;
 use PDO;
 
@@ -41,6 +42,9 @@ class SmartAssistantService
         $dominantCategory = $this->dominantCategoryThisWeek($userId, $week['start'], $week['end']);
         $freeGaps = $this->freeGapsToday($userId);
         $longGap = $this->longestGap($freeGaps);
+        $reminderRepository = new ReminderRepository($this->db);
+        $upcomingReminder = $reminderRepository->upcomingToday($userId, 1)[0] ?? null;
+        $missedReminder = $reminderRepository->missedToday($userId, 1)[0] ?? null;
         $suggestions = [];
         $overPlannedMinutes = $summary['actual_today_minutes'] - $summary['planned_today_minutes'];
 
@@ -171,6 +175,28 @@ class SmartAssistantService
                 ]),
                 'recommendation' => __('assistant.rule.focus.recommendation'),
                 'severity' => 'info',
+            ];
+        }
+
+        if ($upcomingReminder !== null) {
+            $suggestions[] = [
+                'title' => __('assistant.rule.upcoming_reminder.title'),
+                'explanation' => __('assistant.rule.upcoming_reminder.explanation', [
+                    'title' => $upcomingReminder['title'],
+                    'time' => \format_app_time($upcomingReminder['remind_time']),
+                ]),
+                'recommendation' => __('assistant.rule.upcoming_reminder.recommendation'),
+                'severity' => 'info',
+            ];
+        } elseif ($missedReminder !== null) {
+            $suggestions[] = [
+                'title' => __('assistant.rule.missed_reminder.title'),
+                'explanation' => __('assistant.rule.missed_reminder.explanation', [
+                    'title' => $missedReminder['title'],
+                    'time' => \format_app_time($missedReminder['remind_time']),
+                ]),
+                'recommendation' => __('assistant.rule.missed_reminder.recommendation'),
+                'severity' => 'warning',
             ];
         }
 

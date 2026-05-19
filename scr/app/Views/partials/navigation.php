@@ -8,6 +8,7 @@ $navItems = [
     'dashboard' => ['label' => __('nav.dashboard'), 'href' => '/dashboard'],
     'assistant' => ['label' => __('nav.assistant'), 'href' => '/assistant'],
     'timetable' => ['label' => __('nav.timetable'), 'href' => '/timetable'],
+    'reminders' => ['label' => __('nav.reminders'), 'href' => '/reminders'],
     'optimizer' => ['label' => __('nav.optimizer'), 'href' => '/optimizer'],
     'calendar' => ['label' => __('nav.calendar'), 'href' => '/calendar'],
     'schedules' => ['label' => __('nav.schedules'), 'href' => '/schedules'],
@@ -40,6 +41,12 @@ $workspacePages = [
         'subtitle' => __('timetable.eyebrow'),
         'quickLabel' => __('timetable.action.add_schedule'),
         'quickHref' => '/schedules/create',
+    ],
+    'reminders' => [
+        'title' => __('nav.reminders'),
+        'subtitle' => __('reminder.eyebrow'),
+        'quickLabel' => __('action.new_reminder'),
+        'quickHref' => '/reminders/create',
     ],
     'optimizer' => [
         'title' => __('nav.optimizer'),
@@ -131,6 +138,7 @@ $currentLocale = Lang::locale();
                 <a href="/activities/create"><?= $e(__('quick_add.activity')) ?></a>
                 <a href="/schedules/create"><?= $e(__('quick_add.schedule')) ?></a>
                 <a href="/time-logs/create"><?= $e(__('quick_add.time_log')) ?></a>
+                <a href="/reminders/create"><?= $e(__('quick_add.reminder')) ?></a>
                 <a href="/assistant"><?= $e(__('quick_add.assistant')) ?></a>
                 <a href="/optimizer"><?= $e(__('quick_add.optimizer')) ?></a>
             </div>
@@ -198,6 +206,9 @@ $currentLocale = Lang::locale();
     class="toast-config"
     data-toast-validation="<?= $e(__('toast.validation_error')) ?>"
     data-toast-dismiss="<?= $e(__('action.dismiss')) ?>"
+    data-reminder-template="<?= $e(__('reminder.toast_template')) ?>"
+    data-notification-granted="<?= $e(__('reminder.notification_granted')) ?>"
+    data-notification-denied="<?= $e(__('reminder.notification_denied')) ?>"
     hidden
 ></div>
 <div class="toast-region" data-toast-region aria-live="polite" aria-atomic="false"></div>

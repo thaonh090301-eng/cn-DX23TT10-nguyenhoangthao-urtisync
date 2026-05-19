@@ -8,6 +8,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS time_logs;
 DROP TABLE IF EXISTS schedules;
+DROP TABLE IF EXISTS reminders;
 DROP TABLE IF EXISTS activities;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS users;
@@ -79,6 +80,24 @@ CREATE TABLE schedules (
     CONSTRAINT fk_schedules_activity
         FOREIGN KEY (activity_id) REFERENCES activities(id)
         ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE reminders (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    note TEXT NULL,
+    remind_time TIME NOT NULL,
+    repeat_type ENUM('none', 'daily', 'weekly') NOT NULL DEFAULT 'none',
+    day_of_week TINYINT UNSIGNED NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    KEY idx_reminders_user_time (user_id, remind_time),
+    KEY idx_reminders_active (user_id, is_active),
+    CONSTRAINT fk_reminders_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE time_logs (

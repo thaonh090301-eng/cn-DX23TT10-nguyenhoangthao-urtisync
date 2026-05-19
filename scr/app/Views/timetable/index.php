@@ -50,7 +50,7 @@ $reminderTitle = static fn (array $schedule): string => display_activity_title($
                         <?= $e(format_app_time($currentOrNext['start_at'])) ?>
                         -
                         <?= $e(format_app_time($currentOrNext['end_at'])) ?>
-                        ·
+                        &middot;
                         <?= $e(display_category_name($currentOrNext['category_name'])) ?>
                     </p>
                 <?php endif; ?>
@@ -70,6 +70,33 @@ $reminderTitle = static fn (array $schedule): string => display_activity_title($
                     data-reminder-template="<?= $e(__('timetable.reminder_template')) ?>"
                 >
                     <?php foreach ($items as $item): ?>
+                        <?php if ($item['type'] === 'reminder'): ?>
+                            <?php $reminder = $item['reminder']; ?>
+                            <article class="timetable-item reminder">
+                                <div class="timetable-time">
+                                    <strong><?= $e(format_app_time($item['start_at'])) ?></strong>
+                                    <span><?= $e(__('timetable.state.reminder')) ?></span>
+                                </div>
+                                <div class="timetable-card">
+                                    <span class="status-pill info"><?= $e(__('timetable.reminder_label')) ?></span>
+                                    <h2><?= $e($reminder['title']) ?></h2>
+                                    <?php if (!empty($reminder['note'])): ?>
+                                        <p><?= $e($reminder['note']) ?></p>
+                                    <?php endif; ?>
+                                    <p>
+                                        <?= $e(__('reminder.repeat.' . $reminder['repeat_type'])) ?>
+                                        <?php if ($reminder['repeat_type'] === 'weekly' && $reminder['day_of_week'] !== null): ?>
+                                            &middot; <?= $e(__('day.' . $reminder['day_of_week'])) ?>
+                                        <?php endif; ?>
+                                    </p>
+                                    <div class="actions">
+                                        <a href="/reminders/<?= $e($reminder['id']) ?>/edit"><?= $e(__('action.edit')) ?></a>
+                                    </div>
+                                </div>
+                            </article>
+                            <?php continue; ?>
+                        <?php endif; ?>
+
                         <?php if ($item['type'] === 'gap'): ?>
                             <article class="timetable-item gap">
                                 <div class="timetable-time">
@@ -116,9 +143,9 @@ $reminderTitle = static fn (array $schedule): string => display_activity_title($
                                 <p>
                                     <span class="color-chip" style="--chip: <?= $e($schedule['category_color']) ?>"></span>
                                     <?= $e(display_category_name($schedule['category_name'])) ?>
-                                    ·
+                                    &middot;
                                     <?= $e(format_duration_minutes($item['minutes'])) ?>
-                                    ·
+                                    &middot;
                                     <?= $e(__('schedule_status.' . $schedule['status'])) ?>
                                 </p>
 

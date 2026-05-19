@@ -183,6 +183,76 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(toastConfig?.dataset.toastValidation || 'Please fix the highlighted fields.', 'danger');
     }
 
+    const notificationButton = document.querySelector('[data-notification-permission]');
+    const reminderToastTemplate = toastConfig?.dataset.reminderTemplate || 'Coming up: :title';
+    const shownReminderToasts = new Set();
+
+    notificationButton?.addEventListener('click', async () => {
+        if (!('Notification' in window)) {
+            showToast(toastConfig?.dataset.notificationDenied || 'Notifications are not available in this browser.', 'warning');
+            return;
+        }
+
+        const permission = await Notification.requestPermission();
+        const message = permission === 'granted'
+            ? toastConfig?.dataset.notificationGranted
+            : toastConfig?.dataset.notificationDenied;
+
+        showToast(message || '', permission === 'granted' ? 'success' : 'warning');
+    });
+
+    const checkPersonalReminders = async () => {
+        try {
+            const response = await fetch('/api/reminders/today', {
+                headers: {
+                    Accept: 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                return;
+            }
+
+            const payload = await response.json();
+            const reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
+            const now = Date.now();
+
+            reminders.forEach((reminder) => {
+                const start = new Date(reminder.remind_at || '').getTime();
+
+                if (!Number.isFinite(start)) {
+                    return;
+                }
+
+                const reminderKey = `${reminder.id}:${reminder.remind_at}`;
+                const minutesUntilStart = Math.floor((start - now) / 60000);
+
+                if (minutesUntilStart < 0 || minutesUntilStart > 5 || shownReminderToasts.has(reminderKey)) {
+                    return;
+                }
+
+                const title = String(reminder.title || '').trim();
+                const message = reminderToastTemplate.replace(':title', title);
+
+                shownReminderToasts.add(reminderKey);
+                showToast(message, 'warning');
+
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(message, {
+                        body: String(reminder.note || '').trim(),
+                    });
+                }
+            });
+        } catch (error) {
+            // Reminder polling should never interrupt the main UI.
+        }
+    };
+
+    if (toastRegion) {
+        checkPersonalReminders();
+        window.setInterval(checkPersonalReminders, 60000);
+    }
+
     const deleteModal = document.querySelector('[data-delete-modal]');
     const deleteModalMessage = document.querySelector('[data-delete-modal-message]');
     const deleteModalConfirm = document.querySelector('[data-delete-modal-confirm]');

@@ -77,6 +77,34 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
             </div>
         </section>
 
+        <section class="panel dashboard-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow"><?= $e(__('nav.reminders')) ?></p>
+                    <h2><?= $e(__('dashboard.upcoming_reminders')) ?></h2>
+                </div>
+                <a class="button compact" href="/reminders"><?= $e(__('nav.reminders')) ?></a>
+            </div>
+
+            <?php if (($upcomingReminders ?? []) === []): ?>
+                <div class="empty-state compact">
+                    <p><?= $e(__('dashboard.no_upcoming_reminders')) ?></p>
+                </div>
+            <?php else: ?>
+                <div class="reminder-list compact">
+                    <?php foreach ($upcomingReminders as $reminder): ?>
+                        <article class="reminder-row">
+                            <strong><?= $e(format_app_time($reminder['remind_time'])) ?></strong>
+                            <span><?= $e($reminder['title']) ?></span>
+                            <?php if (!empty($reminder['note'])): ?>
+                                <small><?= $e($reminder['note']) ?></small>
+                            <?php endif; ?>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </section>
+
         <section class="split-grid">
             <article class="panel">
                 <div class="section-heading">
