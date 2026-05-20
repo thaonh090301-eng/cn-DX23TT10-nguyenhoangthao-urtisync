@@ -20,27 +20,41 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
     <?php require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR . 'theme_boot.php'; ?>
     <link rel="stylesheet" href="assets/css/app.css">
 </head>
-<body>
-    <main class="app-shell">
+<body class="dashboard-page">
+    <main class="app-shell dashboard-shell">
         <?php $activeNav = 'dashboard'; require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR . 'navigation.php'; ?>
 
-        <section class="page-header">
-            <div>
+        <section class="page-header dashboard-hero">
+            <div class="dashboard-hero-copy">
                 <p class="eyebrow"><?= $e(__('section.overview')) ?></p>
                 <h1><?= $e(__('nav.dashboard')) ?></h1>
             </div>
+            <div class="dashboard-hero-metrics" aria-label="<?= $e(__('nav.dashboard')) ?>">
+                <article>
+                    <span><?= $e(__('dashboard.productivity_score')) ?></span>
+                    <strong><?= $e((int) ($productivityScore['value'] ?? 0)) ?>/100</strong>
+                </article>
+                <article>
+                    <span><?= $e(__('nav.focus')) ?></span>
+                    <strong><?= $e((int) ($summary['focus_logs_today_count'] ?? 0)) ?></strong>
+                </article>
+                <article>
+                    <span><?= $e(__('dashboard.scheduled_items')) ?></span>
+                    <strong><?= $e((int) ($summary['scheduled_items_count'] ?? 0)) ?></strong>
+                </article>
+            </div>
         </section>
 
-        <section class="dashboard-grid">
+        <section class="dashboard-grid dashboard-stat-grid">
             <?php foreach ($summaryCards as $card): ?>
-                <article class="stat-card">
+                <article class="stat-card dashboard-stat-card">
                     <span><?= $e($card['label']) ?></span>
                     <strong><?= $e($card['value']) ?><?= $card['suffix'] !== '' ? ' ' . $e($card['suffix']) : '' ?></strong>
                 </article>
             <?php endforeach; ?>
         </section>
 
-        <section class="panel dashboard-section productivity-panel">
+        <section class="panel dashboard-section productivity-panel dashboard-glass-panel">
             <div class="productivity-score-card">
                 <div>
                     <p class="eyebrow"><?= $e(__('dashboard.gamification_eyebrow')) ?></p>
@@ -74,7 +88,7 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
             </div>
         </section>
 
-        <section class="panel dashboard-section">
+        <section class="panel dashboard-section dashboard-glass-panel dashboard-alert-panel">
             <div class="section-heading">
                 <div>
                     <p class="eyebrow"><?= $e(__('section.alerts')) ?></p>
@@ -96,7 +110,7 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
             <?php endif; ?>
         </section>
 
-        <section class="panel dashboard-section">
+        <section class="panel dashboard-section dashboard-glass-panel dashboard-assistant-panel">
             <div class="section-heading">
                 <div>
                     <p class="eyebrow"><?= $e(__('assistant.eyebrow')) ?></p>
@@ -111,7 +125,7 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
             </div>
         </section>
 
-        <section class="panel dashboard-section">
+        <section class="panel dashboard-section dashboard-glass-panel dashboard-reminders-panel">
             <div class="section-heading">
                 <div>
                     <p class="eyebrow"><?= $e(__('nav.reminders')) ?></p>
@@ -139,7 +153,7 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
             <?php endif; ?>
         </section>
 
-        <section class="panel dashboard-section">
+        <section class="panel dashboard-section dashboard-glass-panel dashboard-important-panel">
             <div class="section-heading">
                 <div>
                     <p class="eyebrow"><?= $e(__('nav.important_dates')) ?></p>
@@ -173,8 +187,8 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
             <?php endif; ?>
         </section>
 
-        <section class="split-grid">
-            <article class="panel">
+        <section class="split-grid dashboard-category-compare">
+            <article class="panel dashboard-glass-panel">
                 <div class="section-heading">
                     <div>
                         <p class="eyebrow"><?= $e(__('section.this_week')) ?></p>
@@ -201,7 +215,7 @@ $actualMax = max(1, ...array_map(static fn (array $row): int => (int) $row['minu
                 </div>
             </article>
 
-            <article class="panel">
+            <article class="panel dashboard-glass-panel">
                 <div class="section-heading">
                     <div>
                         <p class="eyebrow"><?= $e(__('section.this_week')) ?></p>

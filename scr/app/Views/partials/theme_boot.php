@@ -7,17 +7,9 @@
             const accent = storage.getItem('pto-accent');
             const density = storage.getItem('pto-density');
 
-            if (['dark', 'light'].includes(theme)) {
-                root.dataset.theme = theme;
-            }
-
-            if (['blue', 'purple', 'green', 'orange'].includes(accent)) {
-                root.dataset.accent = accent;
-            }
-
-            if (['comfortable', 'compact'].includes(density)) {
-                root.dataset.density = density;
-            }
+            root.dataset.theme = ['dark', 'light'].includes(theme) ? theme : 'light';
+            root.dataset.accent = ['blue', 'purple', 'green', 'orange'].includes(accent) ? accent : 'blue';
+            root.dataset.density = ['comfortable', 'compact'].includes(density) ? density : 'comfortable';
         } catch (error) {
             // localStorage may be unavailable in private browsing or strict browser modes.
         }
