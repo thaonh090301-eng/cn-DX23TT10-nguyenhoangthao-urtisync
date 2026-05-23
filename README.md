@@ -76,7 +76,6 @@ Hệ thống tập trung vào nhu cầu quản lý thời gian cá nhân trong h
 cn-DX23TT10-nguyenhoangthao-urtisync/
 ├── README.md
 ├── .env.example
-├── AGENTS.md
 ├── docs/
 ├── progress-report/
 ├── setup/
