@@ -1,3 +1,11 @@
+<p align="center">
+  <img src="./scr/public/assets/logos/logo-light.png" alt="URTISYNC Logo" width="220">
+</p>
+
+<h1 align="center">URTISYNC</h1>
+<p align="center"><b>System for Optimal Time Management</b></p>
+<p align="center">Hệ thống tối ưu hóa quản lý thời gian cá nhân.</p>
+
 # Hệ thống tối ưu hóa quản lý thời gian cá nhân
 
 ## 1. Thông tin sinh viên
