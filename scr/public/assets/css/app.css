@@ -1296,19 +1296,21 @@ p {
     min-height: 100vh;
     place-items: center;
     background:
-        radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 30%),
+        radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 30%),
         var(--bg);
     padding: var(--space-page);
 }
 
 .login-panel {
+    position: relative;
     display: grid;
-    gap: var(--space-section);
-    width: min(480px, 100%);
+    justify-items: stretch;
+    gap: calc(var(--space-section) * 0.9);
+    width: min(460px, 100%);
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--panel);
-    padding: calc(var(--panel-padding) + 8px);
+    padding: calc(var(--panel-padding) + 14px);
     box-shadow: var(--shadow);
 }
 
@@ -1320,9 +1322,9 @@ p {
 }
 
 .login-logo-img {
-    width: min(320px, 100%);
+    width: min(230px, 100%);
     max-width: 100%;
-    max-height: 100px;
+    max-height: 110px;
     object-fit: contain;
 }
 
@@ -1371,22 +1373,25 @@ p {
 
 .login-panel h1 {
     margin-bottom: 8px;
+    text-align: center;
 }
 
 .login-panel-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-section);
+    display: grid;
+    justify-items: center;
+    gap: calc(var(--dashboard-gap) * 0.45);
+    text-align: center;
 }
 
 .login-panel-header > div:first-child {
-    flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
 }
 
 .login-panel-header .language-switch {
-    flex-shrink: 0;
+    position: absolute;
+    top: var(--sidebar-padding);
+    right: var(--sidebar-padding);
     margin-left: 0;
 }
 
@@ -1402,13 +1407,17 @@ p {
 }
 
 @media (max-width: 560px) {
+    .login-panel {
+        padding-top: calc(var(--panel-padding) + 46px);
+    }
+
     .login-panel-header {
-        flex-direction: column-reverse;
-        align-items: stretch;
+        justify-items: center;
     }
 
     .login-panel-header .language-switch {
-        align-self: flex-end;
+        top: var(--sidebar-padding);
+        right: var(--sidebar-padding);
     }
 }
 

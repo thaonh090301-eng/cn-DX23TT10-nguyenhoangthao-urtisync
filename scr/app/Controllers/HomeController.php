@@ -10,6 +10,10 @@ class HomeController extends Controller
 {
     public function index(): string
     {
+        if ($this->currentUserId() === null) {
+            return $this->redirect('/login');
+        }
+
         return $this->view('home/index', [
             'title' => \__('app.title'),
             'wellnessPosts' => $this->wellnessPosts(),
