@@ -2,7 +2,6 @@
   <img src="./scr/public/assets/images/logos/logo-dark.png" alt="URTISYNC Logo" width="220">
 </p>
 
-<p align="center">Hệ thống tối ưu hóa quản lý thời gian cá nhân.</p>
 
 # Hệ thống tối ưu hóa quản lý thời gian cá nhân
 
