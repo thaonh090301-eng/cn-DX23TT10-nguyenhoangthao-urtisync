@@ -43,8 +43,8 @@ class TimeLogRepository
         $rows = array_merge($scheduledRows, $unscheduledRows);
 
         usort($rows, static function (array $a, array $b): int {
-            $aStart = $a['planned_start_at'] ?? $a['actual_started_at'] ?? '';
-            $bStart = $b['planned_start_at'] ?? $b['actual_started_at'] ?? '';
+            $aStart = $a['sort_at'] ?? $a['planned_start_at'] ?? '';
+            $bStart = $b['sort_at'] ?? $b['planned_start_at'] ?? '';
 
             return strcmp((string) $aStart, (string) $bStart);
         });
@@ -96,39 +96,6 @@ class TimeLogRepository
         return (int) $this->db->lastInsertId();
     }
 
-    public function findBySchedule(int $scheduleId, int $userId): ?array
-    {
-        $statement = $this->db->prepare(
-            'SELECT *
-             FROM time_logs
-             WHERE schedule_id = :schedule_id AND user_id = :user_id
-             ORDER BY id DESC
-             LIMIT 1'
-        );
-        $statement->execute([
-            'schedule_id' => $scheduleId,
-            'user_id' => $userId,
-        ]);
-
-        $timeLog = $statement->fetch();
-
-        return $timeLog ?: null;
-    }
-
-    public function createFromSchedule(int $userId, array $schedule): int
-    {
-        $durationMinutes = max(0, (int) floor((strtotime($schedule['end_at']) - strtotime($schedule['start_at'])) / 60));
-
-        return $this->create($userId, [
-            'activity_id' => (int) $schedule['activity_id'],
-            'schedule_id' => (int) $schedule['id'],
-            'started_at' => $schedule['start_at'],
-            'ended_at' => $schedule['end_at'],
-            'duration_minutes' => $durationMinutes,
-            'note' => \__('time_report.auto_note'),
-        ]);
-    }
-
     public function update(int $id, int $userId, array $data): bool
     {
         $statement = $this->db->prepare(
@@ -176,29 +143,15 @@ class TimeLogRepository
                     s.start_at AS planned_start_at,
                     s.end_at AS planned_end_at,
                     TIMESTAMPDIFF(MINUTE, s.start_at, s.end_at) AS planned_minutes,
-                    s.status AS schedule_status,
-                    s.notes AS schedule_notes,
+                    s.notes AS report_note,
                     a.title AS activity_title,
                     c.name AS category_name,
                     c.color AS category_color,
-                    tl.id AS time_log_id,
-                    tl.started_at AS actual_started_at,
-                    tl.ended_at AS actual_ended_at,
-                    tl.duration_minutes AS actual_minutes,
-                    tl.note AS actual_note,
-                    :row_type AS row_type
+                    :row_type AS row_type,
+                    s.start_at AS sort_at
              FROM schedules s
              INNER JOIN activities a ON a.id = s.activity_id
              INNER JOIN categories c ON c.id = a.category_id
-             LEFT JOIN time_logs tl
-                ON tl.id = (
-                    SELECT tl2.id
-                    FROM time_logs tl2
-                    WHERE tl2.schedule_id = s.id
-                        AND tl2.user_id = :subquery_user_id
-                    ORDER BY tl2.started_at DESC, tl2.id DESC
-                    LIMIT 1
-                )
              WHERE s.user_id = :schedule_user_id
                 AND a.user_id = :activity_user_id
                 AND c.user_id = :category_user_id
@@ -209,7 +162,6 @@ class TimeLogRepository
         );
         $statement->execute([
             'row_type' => 'scheduled',
-            'subquery_user_id' => $userId,
             'schedule_user_id' => $userId,
             'activity_user_id' => $userId,
             'category_user_id' => $userId,
@@ -231,17 +183,12 @@ class TimeLogRepository
                     NULL AS planned_start_at,
                     NULL AS planned_end_at,
                     NULL AS planned_minutes,
-                    NULL AS schedule_status,
-                    NULL AS schedule_notes,
+                    tl.note AS report_note,
                     a.title AS activity_title,
                     c.name AS category_name,
                     c.color AS category_color,
-                    tl.id AS time_log_id,
-                    tl.started_at AS actual_started_at,
-                    tl.ended_at AS actual_ended_at,
-                    tl.duration_minutes AS actual_minutes,
-                    tl.note AS actual_note,
-                    :row_type AS row_type
+                    :row_type AS row_type,
+                    tl.started_at AS sort_at
              FROM time_logs tl
              INNER JOIN activities a ON a.id = tl.activity_id
              INNER JOIN categories c ON c.id = a.category_id

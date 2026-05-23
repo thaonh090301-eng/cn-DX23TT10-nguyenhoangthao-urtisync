@@ -1,3 +1,17 @@
+<?php
+$selectedStatus = $selectedStatus ?? 'all';
+$selectedDate = $selectedDate ?? date('Y-m-d');
+$dateMode = $dateMode ?? 'day';
+$buildSchedulesUrl = static function (string $date, string $status): string {
+    $params = ['date' => $date];
+
+    if ($status !== 'all') {
+        $params['status'] = $status;
+    }
+
+    return '/schedules?' . http_build_query($params);
+};
+?>
 <!doctype html>
 <html lang="<?= $e(\App\Core\Lang::locale()) ?>">
 <head>
@@ -32,7 +46,17 @@
                     <p><?= $e(__('empty.schedules')) ?></p>
                 </div>
             <?php else: ?>
-                <form class="filter-bar" method="get" action="/schedules" data-filter-controls data-filter-target="schedules-table">
+                <form class="filter-bar schedule-filter-bar" method="get" action="/schedules" data-filter-controls data-filter-target="schedules-table">
+                    <label class="filter-field">
+                        <span><?= $e(__('timetable.date')) ?></span>
+                        <input type="date" name="date" value="<?= $dateMode === 'all' ? '' : $e($selectedDate) ?>">
+                    </label>
+                    <div class="filter-field schedule-day-actions" aria-label="<?= $e(__('timetable.date')) ?>">
+                        <button class="button primary" type="submit"><?= $e(__('timetable.action.view_day')) ?></button>
+                        <a class="button compact <?= $dateMode === 'all' ? 'primary' : '' ?>" href="<?= $e($buildSchedulesUrl('all', $selectedStatus)) ?>">
+                            <?= $e(__('schedule_filter.all_days')) ?>
+                        </a>
+                    </div>
                     <label class="filter-field">
                         <span><?= $e(__('filter.search')) ?></span>
                         <input type="search" data-filter-search placeholder="<?= $e(__('filter.search_placeholder')) ?>">
@@ -46,10 +70,10 @@
                     <label class="filter-field">
                         <span><?= $e(__('label.status')) ?></span>
                         <select name="status" onchange="this.form.submit()">
-                            <option value="all" <?= ($selectedStatus ?? 'all') === 'all' ? 'selected' : '' ?>><?= $e(__('filter.all_statuses')) ?></option>
-                            <?php foreach (['scheduled', 'completed', 'cancelled'] as $status): ?>
-                                <option value="<?= $e($status) ?>" <?= ($selectedStatus ?? 'all') === $status ? 'selected' : '' ?>>
-                                    <?= $e(__('schedule_status.' . $status)) ?>
+                            <option value="all" <?= $selectedStatus === 'all' ? 'selected' : '' ?>><?= $e(__('filter.all_statuses')) ?></option>
+                            <?php foreach (($statusOptions ?? []) as $status): ?>
+                                <option value="<?= $e($status) ?>" <?= $selectedStatus === $status ? 'selected' : '' ?>>
+                                    <?= $e(__('schedule_status_display.' . $status)) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -78,7 +102,8 @@
                                     $scheduleTitle = display_activity_title($schedule['title']);
                                     $activityTitle = display_activity_title($schedule['activity_title']);
                                     $categoryName = display_category_name($schedule['category_name']);
-                                    $statusLabel = __('schedule_status.' . $schedule['status']);
+                                    $statusLabel = (string) ($schedule['display_status_label'] ?? __('schedule_status_display.recorded'));
+                                    $statusType = (string) ($schedule['display_status_type'] ?? 'info');
                                     $notes = display_note($schedule['notes'] ?? '');
                                     $searchText = implode(' ', [$scheduleTitle, $activityTitle, $categoryName, $statusLabel, $notes, format_app_datetime($schedule['start_at']), format_app_datetime($schedule['end_at'])]);
                                 ?>
@@ -92,7 +117,9 @@
                                     <td><?= $e(format_app_datetime($schedule['start_at'])) ?></td>
                                     <td><?= $e(format_app_datetime($schedule['end_at'])) ?></td>
                                     <td><?= $e($notes) ?></td>
-                                    <td><?= $e($statusLabel) ?></td>
+                                    <td>
+                                        <span class="status-pill <?= $e($statusType) ?>"><?= $e($statusLabel) ?></span>
+                                    </td>
                                     <td class="actions">
                                         <a href="/schedules/<?= $e($schedule['id']) ?>/edit"><?= $e(__('action.edit')) ?></a>
                                         <a class="danger-link" href="/schedules/<?= $e($schedule['id']) ?>/delete"><?= $e(__('action.delete')) ?></a>

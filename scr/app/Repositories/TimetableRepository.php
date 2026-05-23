@@ -33,23 +33,10 @@ class TimetableRepository
                     a.title AS activity_title,
                     a.priority AS activity_priority,
                     c.name AS category_name,
-                    c.color AS category_color,
-                    tl.id AS time_log_id,
-                    tl.started_at AS actual_started_at,
-                    tl.ended_at AS actual_ended_at,
-                    tl.duration_minutes AS actual_minutes
+                    c.color AS category_color
              FROM schedules s
              INNER JOIN activities a ON a.id = s.activity_id
              INNER JOIN categories c ON c.id = a.category_id
-             LEFT JOIN time_logs tl
-                ON tl.id = (
-                    SELECT tl2.id
-                    FROM time_logs tl2
-                    WHERE tl2.schedule_id = s.id
-                        AND tl2.user_id = :log_user_id
-                    ORDER BY tl2.started_at DESC, tl2.id DESC
-                    LIMIT 1
-                )
              WHERE s.user_id = :schedule_user_id
                 AND a.user_id = :activity_user_id
                 AND c.user_id = :category_user_id
@@ -59,7 +46,6 @@ class TimetableRepository
              ORDER BY s.start_at ASC, s.end_at ASC'
         );
         $statement->execute([
-            'log_user_id' => $userId,
             'schedule_user_id' => $userId,
             'activity_user_id' => $userId,
             'category_user_id' => $userId,

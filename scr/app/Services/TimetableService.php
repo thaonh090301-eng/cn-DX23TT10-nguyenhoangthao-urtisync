@@ -10,6 +10,13 @@ class TimetableService
 {
     private const MIN_GAP_MINUTES = 15;
 
+    private ScheduleStatusResolver $statusResolver;
+
+    public function __construct(?ScheduleStatusResolver $statusResolver = null)
+    {
+        $this->statusResolver = $statusResolver ?? new ScheduleStatusResolver();
+    }
+
     public function build(array $schedules, string $date): array
     {
         $now = new DateTimeImmutable();
@@ -21,6 +28,7 @@ class TimetableService
         foreach ($schedules as $schedule) {
             $start = new DateTimeImmutable($schedule['start_at']);
             $end = new DateTimeImmutable($schedule['end_at']);
+            $status = $this->statusResolver->resolve($schedule, $now);
 
             if ($previousEnd !== null && $start > $previousEnd) {
                 $gap = $this->gapItem($previousEnd, $start);
@@ -32,7 +40,9 @@ class TimetableService
 
             $items[] = [
                 'type' => 'schedule',
-                'state' => $this->scheduleState($schedule, $now, $isToday, $nextScheduleId),
+                'state' => $this->scheduleState($schedule, $now, $isToday, $nextScheduleId, $status['key']),
+                'status_key' => $status['key'],
+                'status_type' => $status['type'],
                 'schedule' => $schedule,
                 'start_at' => $schedule['start_at'],
                 'end_at' => $schedule['end_at'],
@@ -64,9 +74,9 @@ class TimetableService
         return null;
     }
 
-    private function scheduleState(array $schedule, DateTimeImmutable $now, bool $isToday, ?int $nextScheduleId): string
+    private function scheduleState(array $schedule, DateTimeImmutable $now, bool $isToday, ?int $nextScheduleId, string $statusKey): string
     {
-        if ($schedule['time_log_id'] !== null || $schedule['status'] === 'completed') {
+        if ($statusKey === 'completed') {
             return 'logged';
         }
 

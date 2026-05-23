@@ -54,12 +54,8 @@ $formatMinutes = static fn (mixed $value): string => $value === null ? __('time_
                     <strong><?= $e(format_duration_minutes($summary['planned_minutes'])) ?></strong>
                 </article>
                 <article class="stat-card mini">
-                    <span><?= $e(__('time_report.summary.actual')) ?></span>
-                    <strong><?= $e(format_duration_minutes($summary['actual_minutes'])) ?></strong>
-                </article>
-                <article class="stat-card mini">
-                    <span><?= $e(__('time_report.summary.missing')) ?></span>
-                    <strong><?= $e($summary['missing_count']) ?></strong>
+                    <span><?= $e(__('nav.schedules')) ?></span>
+                    <strong><?= $e($summary['scheduled_count']) ?></strong>
                 </article>
             </div>
         </section>
@@ -79,10 +75,6 @@ $formatMinutes = static fn (mixed $value): string => $value === null ? __('time_
                                 <th><?= $e(__('time_report.planned_start')) ?></th>
                                 <th><?= $e(__('time_report.planned_end')) ?></th>
                                 <th><?= $e(__('time_report.planned_duration')) ?></th>
-                                <th><?= $e(__('label.actual_start')) ?></th>
-                                <th><?= $e(__('label.actual_end')) ?></th>
-                                <th><?= $e(__('time_report.actual_duration')) ?></th>
-                                <th><?= $e(__('label.status')) ?></th>
                                 <th><?= $e(__('label.note')) ?></th>
                             </tr>
                         </thead>
@@ -91,7 +83,7 @@ $formatMinutes = static fn (mixed $value): string => $value === null ? __('time_
                                 <?php
                                     $activityTitle = display_activity_title($row['activity_title']);
                                     $categoryName = display_category_name($row['category_name']);
-                                    $note = display_note($row['actual_note'] ?? $row['schedule_notes'] ?? '');
+                                    $note = display_note($row['report_note'] ?? '');
                                 ?>
                                 <tr>
                                     <td><?= $e($activityTitle) ?></td>
@@ -102,14 +94,6 @@ $formatMinutes = static fn (mixed $value): string => $value === null ? __('time_
                                     <td><?= $e($formatTime($row['planned_start_at'])) ?></td>
                                     <td><?= $e($formatTime($row['planned_end_at'])) ?></td>
                                     <td><?= $e($formatMinutes($row['planned_minutes'])) ?></td>
-                                    <td><?= $e($formatTime($row['actual_started_at'])) ?></td>
-                                    <td><?= $e($formatTime($row['actual_ended_at'])) ?></td>
-                                    <td><?= $e($formatMinutes($row['actual_minutes'])) ?></td>
-                                    <td>
-                                        <span class="status-pill <?= $e($row['report_status_type']) ?>">
-                                            <?= $e($row['report_status']) ?>
-                                        </span>
-                                    </td>
                                     <td><?= $e($note) ?></td>
                                 </tr>
                             <?php endforeach; ?>

@@ -8,6 +8,7 @@ use App\Core\Controller;
 use App\Repositories\ActivityRepository;
 use App\Repositories\ImportantDateRepository;
 use App\Repositories\ScheduleRepository;
+use App\Services\ScheduleStatusResolver;
 use DateTimeImmutable;
 use Exception;
 
@@ -15,27 +16,40 @@ class ScheduleController extends Controller
 {
     private const DEMO_USER_ID = 1;
     private const STATUSES = ['scheduled', 'completed', 'cancelled'];
+    private const DISPLAY_STATUSES = [
+        ScheduleStatusResolver::RECORDED,
+        ScheduleStatusResolver::IN_PROGRESS,
+        ScheduleStatusResolver::COMPLETED,
+        ScheduleStatusResolver::CANCELLED,
+    ];
 
     private ScheduleRepository $schedules;
     private ActivityRepository $activities;
     private ImportantDateRepository $importantDates;
+    private ScheduleStatusResolver $statusResolver;
 
     public function __construct()
     {
         $this->schedules = new ScheduleRepository();
         $this->activities = new ActivityRepository();
         $this->importantDates = new ImportantDateRepository();
+        $this->statusResolver = new ScheduleStatusResolver();
     }
 
     public function index(): string
     {
         $statusFilter = $this->statusFilter();
-        $schedules = $this->schedules->allByUser($this->authUserId());
-        $hasSchedules = $schedules !== [];
+        $dateFilter = $this->dateFilterFromRequest();
+        $userId = $this->authUserId();
+        $schedules = $dateFilter['mode'] === 'all'
+            ? $this->schedules->allByUser($userId)
+            : $this->schedules->forDateByUser($userId, $dateFilter['date']);
+        $hasSchedules = $this->schedules->existsByUser($userId);
+        $schedules = $this->withDisplayStatus($schedules);
 
         if ($statusFilter !== 'all') {
             $schedules = array_values(array_filter($schedules, static function (array $schedule) use ($statusFilter): bool {
-                return (string) $schedule['status'] === $statusFilter;
+                return (string) $schedule['display_status'] === $statusFilter;
             }));
         }
 
@@ -44,6 +58,9 @@ class ScheduleController extends Controller
             'schedules' => $schedules,
             'hasSchedules' => $hasSchedules,
             'selectedStatus' => $statusFilter,
+            'statusOptions' => self::DISPLAY_STATUSES,
+            'dateMode' => $dateFilter['mode'],
+            'selectedDate' => $dateFilter['date'],
             'flash' => $this->consumeFlash(),
         ]);
     }
@@ -101,7 +118,7 @@ class ScheduleController extends Controller
         $this->schedules->create($this->authUserId(), $data);
         $this->flash('success', \__('flash.schedule_created'));
 
-        return $this->redirect('/schedules');
+        return $this->redirect('/schedules?date=' . urlencode(substr((string) $data['start_at'], 0, 10)));
     }
 
     public function edit(string $id): string
@@ -138,7 +155,7 @@ class ScheduleController extends Controller
         $this->schedules->update((int) $id, $this->authUserId(), $data);
         $this->flash('success', \__('flash.schedule_updated'));
 
-        return $this->redirect('/schedules');
+        return $this->redirect('/schedules?date=' . urlencode(substr((string) $data['start_at'], 0, 10)));
     }
 
     public function delete(string $id): string
@@ -232,7 +249,47 @@ class ScheduleController extends Controller
     {
         $status = (string) ($_GET['status'] ?? 'all');
 
-        return in_array($status, ['all', ...self::STATUSES], true) ? $status : 'all';
+        return in_array($status, ['all', ...self::DISPLAY_STATUSES], true) ? $status : 'all';
+    }
+
+    private function dateFilterFromRequest(): array
+    {
+        $hasDateParameter = array_key_exists('date', $_GET);
+        $date = trim((string) ($_GET['date'] ?? date('Y-m-d')));
+
+        if ($date === 'all' || ($hasDateParameter && $date === '')) {
+            return [
+                'mode' => 'all',
+                'date' => date('Y-m-d'),
+            ];
+        }
+
+        return [
+            'mode' => 'day',
+            'date' => $this->isDate($date) ? $date : date('Y-m-d'),
+        ];
+    }
+
+    private function isDate(string $value): bool
+    {
+        $date = DateTimeImmutable::createFromFormat('Y-m-d', $value);
+
+        return $date !== false && $date->format('Y-m-d') === $value;
+    }
+
+    private function withDisplayStatus(array $schedules): array
+    {
+        $now = new DateTimeImmutable();
+
+        return array_map(function (array $schedule) use ($now): array {
+            $displayStatus = $this->statusResolver->resolve($schedule, $now);
+
+            $schedule['display_status'] = $displayStatus['key'];
+            $schedule['display_status_label'] = \__($displayStatus['label_key']);
+            $schedule['display_status_type'] = $displayStatus['type'];
+
+            return $schedule;
+        }, $schedules);
     }
 
     private function findScheduleOrFail(int $id): array

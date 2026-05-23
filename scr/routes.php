@@ -85,10 +85,3 @@ $router->get('/important-dates/{id}/delete', [ImportantDateController::class, 'd
 $router->delete('/important-dates/{id}', [ImportantDateController::class, 'destroy']);
 
 $router->get('/time-logs', [TimeLogController::class, 'index']);
-$router->get('/time-logs/create', [TimeLogController::class, 'create']);
-$router->post('/time-logs', [TimeLogController::class, 'store']);
-$router->post('/time-logs/schedules/{id}/confirm', [TimeLogController::class, 'confirmSchedule']);
-$router->get('/time-logs/{id}/edit', [TimeLogController::class, 'edit']);
-$router->put('/time-logs/{id}', [TimeLogController::class, 'update']);
-$router->get('/time-logs/{id}/delete', [TimeLogController::class, 'delete']);
-$router->delete('/time-logs/{id}', [TimeLogController::class, 'destroy']);

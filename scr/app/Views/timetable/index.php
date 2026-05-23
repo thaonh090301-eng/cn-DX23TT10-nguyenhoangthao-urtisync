@@ -189,9 +189,8 @@ $reminderTitle = static fn (array $schedule): string => display_activity_title($
                             $schedule = $item['schedule'];
                             $state = $stateClass($item['state']);
                             $title = $reminderTitle($schedule);
-                            $isConfirmed = $schedule['time_log_id'] !== null;
-                            $statusClass = $isConfirmed ? 'success' : 'warning';
-                            $statusLabel = $isConfirmed ? __('time_report.status.confirmed') : __('time_report.status.not_confirmed');
+                            $statusClass = (string) ($item['status_type'] ?? 'info');
+                            $statusLabel = __('schedule_status_display.' . ($item['status_key'] ?? 'recorded'));
                         ?>
                         <article
                             class="timetable-item <?= $e($state) ?>"
@@ -215,18 +214,9 @@ $reminderTitle = static fn (array $schedule): string => display_activity_title($
                                     <?= $e(display_category_name($schedule['category_name'])) ?>
                                     &middot;
                                     <?= $e(format_duration_minutes($item['minutes'])) ?>
-                                    &middot;
-                                    <?= $e(__('schedule_status.' . $schedule['status'])) ?>
                                 </p>
 
                                 <div class="actions">
-                                    <?php if ($schedule['time_log_id'] !== null): ?>
-                                        <a href="/time-logs/<?= $e($schedule['time_log_id']) ?>/edit"><?= $e(__('timetable.action.edit_log')) ?></a>
-                                    <?php else: ?>
-                                        <form method="post" action="/time-logs/schedules/<?= $e($schedule['id']) ?>/confirm">
-                                            <button class="button compact primary" type="submit"><?= $e(__('timetable.action.add_time_log')) ?></button>
-                                        </form>
-                                    <?php endif; ?>
                                     <a href="/schedules/<?= $e($schedule['id']) ?>/edit"><?= $e(__('action.edit')) ?></a>
                                 </div>
                             </div>

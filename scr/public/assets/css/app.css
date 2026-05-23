@@ -159,6 +159,48 @@ body.dashboard-page::before {
     opacity: 0.28;
 }
 
+body.home-page {
+    --home-page-bg: linear-gradient(135deg, #f7f7f2 0%, #eef4f1 52%, #fff4e6 100%);
+    --home-grid-line: rgba(26, 33, 29, 0.07);
+    --home-chrome-bg: rgba(255, 255, 255, 0.76);
+    --home-glass-line: rgba(26, 33, 29, 0.12);
+    --home-hero-bg:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.45)),
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 14%, transparent), rgba(139, 216, 173, 0.12));
+    --home-card-bg:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.42)),
+        rgba(255, 255, 255, 0.5);
+    --home-subtle-bg: rgba(255, 255, 255, 0.54);
+    background: var(--home-page-bg);
+}
+
+[data-theme="dark"] body.home-page {
+    --home-page-bg: linear-gradient(135deg, #101211 0%, #151917 52%, #1c1712 100%);
+    --home-grid-line: rgba(255, 255, 255, 0.045);
+    --home-chrome-bg: rgba(19, 23, 20, 0.74);
+    --home-glass-line: rgba(255, 255, 255, 0.13);
+    --home-hero-bg:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.045)),
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 20%, transparent), rgba(139, 216, 173, 0.08));
+    --home-card-bg:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.045)),
+        rgba(16, 18, 17, 0.48);
+    --home-subtle-bg: rgba(255, 255, 255, 0.055);
+}
+
+body.home-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(var(--home-grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--home-grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 78%);
+    opacity: 0.26;
+}
+
 [data-density="compact"] {
     --sidebar-width: 258px;
     --space-page: 12px;
@@ -235,6 +277,160 @@ a:hover {
     background: var(--panel);
     padding: calc(var(--panel-padding) + 10px);
     box-shadow: var(--shadow-soft);
+}
+
+.home-page .home-shell {
+    position: relative;
+    z-index: 1;
+}
+
+.home-page .workspace-sidebar,
+.home-page .workspace-topbar,
+.home-page .intro-panel,
+.home-page .wellness-card {
+    backdrop-filter: blur(18px);
+}
+
+.home-page .workspace-sidebar,
+.home-page .workspace-topbar {
+    border-color: var(--home-glass-line);
+    background: var(--home-chrome-bg);
+}
+
+.home-page .intro-panel {
+    border-color: var(--home-glass-line);
+    background: var(--home-hero-bg);
+    box-shadow: var(--shadow);
+}
+
+.wellness-section {
+    display: grid;
+    gap: var(--space-section);
+    margin-top: var(--space-section);
+}
+
+.wellness-heading {
+    margin-bottom: 0;
+}
+
+.wellness-heading p:not(.eyebrow) {
+    max-width: 720px;
+    font-size: var(--small-font-size);
+}
+
+.wellness-grid {
+    display: grid;
+    gap: var(--dashboard-gap);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.wellness-card {
+    --wellness-tone: var(--accent);
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: calc(var(--dashboard-gap) * 0.78);
+    min-height: 236px;
+    overflow: hidden;
+    border: 1px solid var(--home-glass-line, var(--line));
+    border-radius: 8px;
+    background: var(--home-card-bg, var(--panel));
+    padding: var(--space-section);
+    box-shadow: var(--shadow-soft);
+}
+
+.wellness-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, var(--wellness-tone), color-mix(in srgb, var(--wellness-tone) 18%, transparent));
+    opacity: 0.88;
+}
+
+.wellness-card-motion {
+    --wellness-tone: var(--success);
+}
+
+.wellness-card-nutrition {
+    --wellness-tone: var(--warning);
+}
+
+.wellness-card-reading {
+    --wellness-tone: #6f8df6;
+}
+
+.wellness-card-selfcare {
+    --wellness-tone: #b07af3;
+}
+
+[data-theme="dark"] .wellness-card-reading {
+    --wellness-tone: #9eb2ff;
+}
+
+[data-theme="dark"] .wellness-card-selfcare {
+    --wellness-tone: #d6b7ff;
+}
+
+.wellness-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--dashboard-gap);
+}
+
+.wellness-marker {
+    display: inline-grid;
+    flex: 0 0 46px;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid color-mix(in srgb, var(--wellness-tone) 36%, var(--home-glass-line, var(--line)));
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--wellness-tone) 12%, var(--home-subtle-bg, var(--panel-muted)));
+    color: var(--wellness-tone);
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.wellness-marker svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.9;
+}
+
+.wellness-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    max-width: 100%;
+    border: 1px solid color-mix(in srgb, var(--wellness-tone) 28%, var(--home-glass-line, var(--line)));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--wellness-tone) 9%, var(--home-subtle-bg, var(--panel-muted)));
+    color: var(--wellness-tone);
+    font-size: 12px;
+    font-weight: 850;
+    padding: 6px 10px;
+    overflow-wrap: anywhere;
+}
+
+.wellness-card h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 20px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.wellness-card p {
+    color: var(--muted);
+    font-size: var(--small-font-size);
+    line-height: var(--content-line-height);
 }
 
 .eyebrow {
@@ -979,6 +1175,18 @@ p {
     gap: var(--dashboard-gap);
     grid-template-columns: minmax(220px, 1.4fr) repeat(2, minmax(160px, 0.8fr));
     margin-bottom: var(--space-section);
+}
+
+.schedule-filter-bar {
+    align-items: end;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.schedule-day-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: calc(var(--dashboard-gap) * 0.55);
 }
 
 .filter-field {
@@ -2097,7 +2305,7 @@ button.compact {
 .time-report-summary {
     display: grid;
     gap: var(--dashboard-gap);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .report-table-wrap {
@@ -2105,7 +2313,7 @@ button.compact {
 }
 
 .time-report-table {
-    min-width: 1180px;
+    min-width: 760px;
 }
 
 .status-pill {

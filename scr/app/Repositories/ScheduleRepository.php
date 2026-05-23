@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Core\Database;
+use App\Services\ScheduleStatusResolver;
 use PDO;
 
 class ScheduleRepository
@@ -32,6 +33,43 @@ class ScheduleRepository
         $statement->execute(['user_id' => $userId]);
 
         return $statement->fetchAll();
+    }
+
+    public function forDateByUser(int $userId, string $date): array
+    {
+        $rangeStart = $date . ' 00:00:00';
+        $rangeEnd = date('Y-m-d H:i:s', strtotime($rangeStart . ' +1 day'));
+
+        $statement = $this->db->prepare(
+            'SELECT s.*,
+                    a.title AS activity_title,
+                    c.name AS category_name,
+                    c.color AS category_color
+             FROM schedules s
+             INNER JOIN activities a ON a.id = s.activity_id
+             INNER JOIN categories c ON c.id = a.category_id
+             WHERE s.user_id = :user_id
+                AND s.start_at < :range_end
+                AND s.end_at > :range_start
+             ORDER BY s.start_at ASC, s.end_at ASC'
+        );
+        $statement->execute([
+            'user_id' => $userId,
+            'range_start' => $rangeStart,
+            'range_end' => $rangeEnd,
+        ]);
+
+        return $statement->fetchAll();
+    }
+
+    public function existsByUser(int $userId): bool
+    {
+        $statement = $this->db->prepare(
+            'SELECT 1 FROM schedules WHERE user_id = :user_id LIMIT 1'
+        );
+        $statement->execute(['user_id' => $userId]);
+
+        return $statement->fetchColumn() !== false;
     }
 
     public function findByUser(int $id, int $userId): ?array
@@ -120,8 +158,11 @@ class ScheduleRepository
     public function calendarEventsByUser(int $userId): array
     {
         $schedules = $this->allByUser($userId);
+        $statusResolver = new ScheduleStatusResolver();
 
-        return array_map(static function (array $schedule): array {
+        return array_map(static function (array $schedule) use ($statusResolver): array {
+            $displayStatus = $statusResolver->resolve($schedule);
+
             return [
                 'id' => (string) $schedule['id'],
                 'title' => \display_activity_title($schedule['title']),
@@ -133,7 +174,8 @@ class ScheduleRepository
                 'extendedProps' => [
                     'activity' => \display_activity_title($schedule['activity_title']),
                     'category' => \display_category_name($schedule['category_name']),
-                    'status' => \__('schedule_status.' . $schedule['status']),
+                    'status' => \__($displayStatus['label_key']),
+                    'statusKey' => $displayStatus['key'],
                     'notes' => \display_note($schedule['notes']),
                 ],
             ];

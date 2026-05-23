@@ -246,9 +246,6 @@ $currentLocale = Lang::locale();
             <div class="quick-add-panel" id="quick-add-panel" data-quick-add-panel hidden>
                 <a href="/activities/create"><?= $e(__('quick_add.activity')) ?></a>
                 <a href="/schedules/create"><?= $e(__('quick_add.schedule')) ?></a>
-                <?php if ($activeNav !== 'time_logs'): ?>
-                    <a href="/time-logs/create"><?= $e(__('quick_add.time_log')) ?></a>
-                <?php endif; ?>
                 <a href="/reminders/create"><?= $e(__('quick_add.reminder')) ?></a>
                 <a href="/important-dates/create"><?= $e(__('quick_add.important_date')) ?></a>
                 <a href="/focus"><?= $e(__('quick_add.focus')) ?></a>
