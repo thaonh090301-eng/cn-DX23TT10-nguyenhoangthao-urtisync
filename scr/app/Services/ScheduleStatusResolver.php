@@ -5,32 +5,26 @@ declare(strict_types=1);
 namespace App\Services;
 
 use DateTimeImmutable;
+use DateTimeZone;
 
 class ScheduleStatusResolver
 {
-    public const RECORDED = 'recorded';
+    private const TIMEZONE = 'Asia/Ho_Chi_Minh';
+
+    public const SCHEDULED = 'scheduled';
     public const IN_PROGRESS = 'in_progress';
     public const COMPLETED = 'completed';
-    public const CANCELLED = 'cancelled';
 
     public function resolve(array $schedule, ?DateTimeImmutable $now = null): array
     {
-        if (($schedule['status'] ?? '') === self::CANCELLED) {
-            return [
-                'key' => self::CANCELLED,
-                'label_key' => 'schedule_status_display.' . self::CANCELLED,
-                'type' => 'alarm',
-            ];
-        }
-
-        $now ??= new DateTimeImmutable();
-        $start = new DateTimeImmutable((string) $schedule['start_at']);
-        $end = new DateTimeImmutable((string) $schedule['end_at']);
+        $now = $now === null ? $this->now() : $now->setTimezone($this->timezone());
+        $start = $this->dateTime((string) $schedule['start_at']);
+        $end = $this->dateTime((string) $schedule['end_at']);
 
         if ($now < $start) {
             return [
-                'key' => self::RECORDED,
-                'label_key' => 'schedule_status_display.' . self::RECORDED,
+                'key' => self::SCHEDULED,
+                'label_key' => 'schedule_status_display.' . self::SCHEDULED,
                 'type' => 'info',
             ];
         }
@@ -48,5 +42,20 @@ class ScheduleStatusResolver
             'label_key' => 'schedule_status_display.' . self::COMPLETED,
             'type' => 'success',
         ];
+    }
+
+    public function now(): DateTimeImmutable
+    {
+        return new DateTimeImmutable('now', $this->timezone());
+    }
+
+    public function dateTime(string $value): DateTimeImmutable
+    {
+        return new DateTimeImmutable($value, $this->timezone());
+    }
+
+    private function timezone(): DateTimeZone
+    {
+        return new DateTimeZone(self::TIMEZONE);
     }
 }

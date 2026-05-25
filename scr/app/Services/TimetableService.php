@@ -19,15 +19,15 @@ class TimetableService
 
     public function build(array $schedules, string $date): array
     {
-        $now = new DateTimeImmutable();
+        $now = $this->statusResolver->now();
         $isToday = $date === $now->format('Y-m-d');
         $items = [];
         $nextScheduleId = $this->nextScheduleId($schedules, $now, $isToday);
         $previousEnd = null;
 
         foreach ($schedules as $schedule) {
-            $start = new DateTimeImmutable($schedule['start_at']);
-            $end = new DateTimeImmutable($schedule['end_at']);
+            $start = $this->statusResolver->dateTime((string) $schedule['start_at']);
+            $end = $this->statusResolver->dateTime((string) $schedule['end_at']);
             $status = $this->statusResolver->resolve($schedule, $now);
 
             if ($previousEnd !== null && $start > $previousEnd) {
@@ -64,7 +64,7 @@ class TimetableService
         }
 
         foreach ($schedules as $schedule) {
-            $start = new DateTimeImmutable($schedule['start_at']);
+            $start = $this->statusResolver->dateTime((string) $schedule['start_at']);
 
             if ($start > $now) {
                 return (int) $schedule['id'];
@@ -81,8 +81,8 @@ class TimetableService
         }
 
         if ($isToday) {
-            $start = new DateTimeImmutable($schedule['start_at']);
-            $end = new DateTimeImmutable($schedule['end_at']);
+            $start = $this->statusResolver->dateTime((string) $schedule['start_at']);
+            $end = $this->statusResolver->dateTime((string) $schedule['end_at']);
 
             if ($start <= $now && $end >= $now) {
                 return 'current';

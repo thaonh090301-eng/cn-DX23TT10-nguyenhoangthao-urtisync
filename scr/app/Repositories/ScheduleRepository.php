@@ -159,9 +159,10 @@ class ScheduleRepository
     {
         $schedules = $this->allByUser($userId);
         $statusResolver = new ScheduleStatusResolver();
+        $now = $statusResolver->now();
 
-        return array_map(static function (array $schedule) use ($statusResolver): array {
-            $displayStatus = $statusResolver->resolve($schedule);
+        return array_map(static function (array $schedule) use ($statusResolver, $now): array {
+            $displayStatus = $statusResolver->resolve($schedule, $now);
 
             return [
                 'id' => (string) $schedule['id'],

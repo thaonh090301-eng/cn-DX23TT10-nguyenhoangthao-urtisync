@@ -190,11 +190,11 @@ class DashboardRepository
     private function scheduledItemsCount(int $userId): int
     {
         $statement = $this->db->prepare(
-            'SELECT COUNT(*) FROM schedules WHERE user_id = :user_id AND status = :status'
+            'SELECT COUNT(*) FROM schedules WHERE user_id = :user_id AND status <> :cancelled_status'
         );
         $statement->execute([
             'user_id' => $userId,
-            'status' => 'scheduled',
+            'cancelled_status' => 'cancelled',
         ]);
 
         return (int) $statement->fetchColumn();

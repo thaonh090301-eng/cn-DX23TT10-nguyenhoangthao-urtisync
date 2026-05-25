@@ -190,7 +190,7 @@ $reminderTitle = static fn (array $schedule): string => display_activity_title($
                             $state = $stateClass($item['state']);
                             $title = $reminderTitle($schedule);
                             $statusClass = (string) ($item['status_type'] ?? 'info');
-                            $statusLabel = __('schedule_status_display.' . ($item['status_key'] ?? 'recorded'));
+                            $statusLabel = __('schedule_status_display.' . ($item['status_key'] ?? 'scheduled'));
                         ?>
                         <article
                             class="timetable-item <?= $e($state) ?>"

@@ -9,6 +9,7 @@ use App\Repositories\ActivityRepository;
 use App\Repositories\ReminderRepository;
 use App\Repositories\ScheduleRepository;
 use App\Repositories\TimetableRepository;
+use App\Services\ScheduleStatusResolver;
 use App\Services\TimetableService;
 use DateTimeImmutable;
 
@@ -20,6 +21,7 @@ class TimetableController extends Controller
     private ReminderRepository $reminderRepository;
     private ActivityRepository $activityRepository;
     private ScheduleRepository $scheduleRepository;
+    private ScheduleStatusResolver $statusResolver;
     private TimetableService $timetableService;
 
     public function __construct()
@@ -28,7 +30,8 @@ class TimetableController extends Controller
         $this->reminderRepository = new ReminderRepository();
         $this->activityRepository = new ActivityRepository();
         $this->scheduleRepository = new ScheduleRepository();
-        $this->timetableService = new TimetableService();
+        $this->statusResolver = new ScheduleStatusResolver();
+        $this->timetableService = new TimetableService($this->statusResolver);
     }
 
     public function index(): string
@@ -224,15 +227,15 @@ class TimetableController extends Controller
 
     private function currentOrNext(array $schedules, string $date): ?array
     {
-        $now = new DateTimeImmutable();
+        $now = $this->statusResolver->now();
 
         if ($date !== $now->format('Y-m-d')) {
             return $schedules[0] ?? null;
         }
 
         foreach ($schedules as $schedule) {
-            $start = new DateTimeImmutable($schedule['start_at']);
-            $end = new DateTimeImmutable($schedule['end_at']);
+            $start = $this->statusResolver->dateTime((string) $schedule['start_at']);
+            $end = $this->statusResolver->dateTime((string) $schedule['end_at']);
 
             if ($start <= $now && $end >= $now) {
                 return array_merge($schedule, ['focus_state' => 'current']);
@@ -240,7 +243,7 @@ class TimetableController extends Controller
         }
 
         foreach ($schedules as $schedule) {
-            $start = new DateTimeImmutable($schedule['start_at']);
+            $start = $this->statusResolver->dateTime((string) $schedule['start_at']);
 
             if ($start > $now) {
                 return array_merge($schedule, ['focus_state' => 'next']);

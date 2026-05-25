@@ -68,20 +68,6 @@ $dateTimeLocal = static fn (mixed $value): string => str_replace(' ', 'T', subst
             </div>
 
             <label>
-                <span><?= $e(__('label.status')) ?></span>
-                <select name="status" required>
-                    <?php foreach ($statuses as $status): ?>
-                        <option value="<?= $e($status) ?>" <?= (($schedule['status'] ?? 'scheduled') === $status) ? 'selected' : '' ?>>
-                            <?= $e(__('schedule_status.' . $status)) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <?php if (!empty($errors['status'])): ?>
-                    <small class="field-error"><?= $e($errors['status']) ?></small>
-                <?php endif; ?>
-            </label>
-
-            <label>
                 <span><?= $e(__('label.notes')) ?></span>
                 <textarea name="notes" rows="4"><?= $e($schedule['notes'] ?? '') ?></textarea>
             </label>

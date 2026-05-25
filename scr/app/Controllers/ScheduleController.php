@@ -15,12 +15,10 @@ use Exception;
 class ScheduleController extends Controller
 {
     private const DEMO_USER_ID = 1;
-    private const STATUSES = ['scheduled', 'completed', 'cancelled'];
     private const DISPLAY_STATUSES = [
-        ScheduleStatusResolver::RECORDED,
+        ScheduleStatusResolver::SCHEDULED,
         ScheduleStatusResolver::IN_PROGRESS,
         ScheduleStatusResolver::COMPLETED,
-        ScheduleStatusResolver::CANCELLED,
     ];
 
     private ScheduleRepository $schedules;
@@ -93,7 +91,6 @@ class ScheduleController extends Controller
             'title' => 'Create Schedule',
             'schedule' => $this->defaultSchedule(),
             'activities' => $this->activities->allByUser($this->authUserId()),
-            'statuses' => self::STATUSES,
             'errors' => [],
         ]);
     }
@@ -110,7 +107,6 @@ class ScheduleController extends Controller
                 'title' => 'Create Schedule',
                 'schedule' => $data,
                 'activities' => $this->activities->allByUser($this->authUserId()),
-                'statuses' => self::STATUSES,
                 'errors' => $errors,
             ]);
         }
@@ -129,7 +125,6 @@ class ScheduleController extends Controller
             'title' => 'Edit Schedule',
             'schedule' => $schedule,
             'activities' => $this->activities->allByUser($this->authUserId()),
-            'statuses' => self::STATUSES,
             'errors' => [],
         ]);
     }
@@ -147,7 +142,6 @@ class ScheduleController extends Controller
                 'title' => 'Edit Schedule',
                 'schedule' => array_merge($schedule, $data),
                 'activities' => $this->activities->allByUser($this->authUserId()),
-                'statuses' => self::STATUSES,
                 'errors' => $errors,
             ]);
         }
@@ -182,7 +176,7 @@ class ScheduleController extends Controller
             'title' => trim((string) ($_POST['title'] ?? '')),
             'start_at' => $this->normalizeDateTime((string) ($_POST['start_at'] ?? '')),
             'end_at' => $this->normalizeDateTime((string) ($_POST['end_at'] ?? '')),
-            'status' => (string) ($_POST['status'] ?? 'scheduled'),
+            'status' => 'scheduled',
             'notes' => trim((string) ($_POST['notes'] ?? '')),
         ];
     }
@@ -224,10 +218,6 @@ class ScheduleController extends Controller
 
         if ($data['start_at'] !== null && $data['end_at'] !== null && strtotime($data['end_at']) <= strtotime($data['start_at'])) {
             $errors['end_at'] = \__('validation.end_after_start');
-        }
-
-        if (!in_array($data['status'], self::STATUSES, true)) {
-            $errors['status'] = \__('validation.valid_status');
         }
 
         return $errors;
@@ -279,7 +269,7 @@ class ScheduleController extends Controller
 
     private function withDisplayStatus(array $schedules): array
     {
-        $now = new DateTimeImmutable();
+        $now = $this->statusResolver->now();
 
         return array_map(function (array $schedule) use ($now): array {
             $displayStatus = $this->statusResolver->resolve($schedule, $now);

@@ -36,12 +36,16 @@ $env = static function (string $key, mixed $default = null): mixed {
     return $value;
 };
 
+$timezone = (string) $env('APP_TIMEZONE', 'Asia/Ho_Chi_Minh');
+date_default_timezone_set($timezone);
+
 return [
     'app' => [
         'name' => 'Personal Time Optimizer',
         'env' => $env('APP_ENV', 'local'),
         'debug' => filter_var($env('APP_DEBUG', true), FILTER_VALIDATE_BOOLEAN),
         'url' => rtrim((string) $env('APP_URL', 'http://localhost/personal-time-optimizer/scr/public'), '/'),
+        'timezone' => $timezone,
     ],
     'database' => [
         'host' => $env('DB_HOST', '127.0.0.1'),

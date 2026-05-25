@@ -8,6 +8,8 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'app');
 
